@@ -104,7 +104,12 @@
 			<artifactId>unirest-object-mappers-gson</artifactId>
 			<version>4.2.9</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
