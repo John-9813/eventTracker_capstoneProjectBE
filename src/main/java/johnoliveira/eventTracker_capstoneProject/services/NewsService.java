@@ -16,13 +16,23 @@ public class NewsService {
     @Autowired
     private NewsRepository newsRepository;
 
+    // metodo per cercare news
     public News getNewsById(UUID newsId) {
-        return newsRepository.findById(newsId)
-                .orElseThrow(() -> new NotFoundException("News not found with ID: " + newsId));
+        return newsRepository.findById(newsId).orElseThrow(() ->
+                new NotFoundException("News not found with ID: " + newsId));
     }
 
+    //metodo per ottenere la lista di tutte le news
     public List<News> getAllNews() {
         return newsRepository.findAll();
     }
+
+    // metodo per cercare le news tramite keyword specifiche
+    public List<News> searchNewsByKeyword(String keyword) {
+        return newsRepository.findAll().stream().filter(news ->
+                        news.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
+                        news.getDescription().toLowerCase().contains(keyword.toLowerCase())).toList();
+    }
+
 }
 

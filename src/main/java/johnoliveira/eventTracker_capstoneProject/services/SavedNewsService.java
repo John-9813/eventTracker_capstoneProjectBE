@@ -26,8 +26,8 @@ public class SavedNewsService {
     }
 
     public void deleteSavedNews(UUID savedNewsId) {
-        SavedNews savedNews = savedNewsRepository.findById(savedNewsId)
-                .orElseThrow(() -> new NotFoundException("Saved news not found with ID: " + savedNewsId));
+        SavedNews savedNews = savedNewsRepository.findById(savedNewsId).orElseThrow(() ->
+                        new NotFoundException("Saved news not found with ID: " + savedNewsId));
         savedNewsRepository.delete(savedNews);
     }
 }

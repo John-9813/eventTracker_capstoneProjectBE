@@ -17,18 +17,30 @@ public class SavedEventService {
     @Autowired
     private SavedEventRepository savedEventRepository;
 
+    // metodo per salvare un evento
     public SavedEvent saveEvent(SavedEvent savedEvent) {
         return savedEventRepository.save(savedEvent);
     }
 
+    // metodo per mostrare gli eventi salvati
     public List<SavedEvent> getSavedEventsByUser(User user) {
         return savedEventRepository.findByUser(user);
     }
 
+    // metodo per eliminare eventi salvati
     public void deleteSavedEvent(UUID savedEventId) {
-        SavedEvent savedEvent = savedEventRepository.findById(savedEventId)
-                .orElseThrow(() -> new NotFoundException("Saved event not found with ID: " + savedEventId));
+        SavedEvent savedEvent = savedEventRepository.findById(savedEventId).orElseThrow(() ->
+                        new NotFoundException("Saved event not found with ID: " + savedEventId));
         savedEventRepository.delete(savedEvent);
     }
+
+    // metodo per aggiornare annotazioni sugli eventi salvati
+    public SavedEvent updateNotes(UUID savedEventId, String newNotes) {
+        SavedEvent savedEvent = savedEventRepository.findById(savedEventId).orElseThrow(() ->
+                        new NotFoundException("Saved event not found with ID: " + savedEventId));
+        savedEvent.setNotes(newNotes);
+        return savedEventRepository.save(savedEvent);
+    }
+
 }
 
