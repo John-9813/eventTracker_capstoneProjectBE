@@ -5,9 +5,10 @@ import johnoliveira.eventTracker_capstoneProject.entities.News;
 import johnoliveira.eventTracker_capstoneProject.exceptions.NotFoundException;
 import johnoliveira.eventTracker_capstoneProject.repositories.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -16,23 +17,25 @@ public class NewsService {
     @Autowired
     private NewsRepository newsRepository;
 
-    // metodo per cercare news
+
+    // recupera una notizia tramite il suo ID.
     public News getNewsById(UUID newsId) {
         return newsRepository.findById(newsId).orElseThrow(() ->
                 new NotFoundException("News not found with ID: " + newsId));
     }
 
-    //metodo per ottenere la lista di tutte le news
-    public List<News> getAllNews() {
-        return newsRepository.findAll();
+
+    // recupera tutte le notizie con paginazione.
+    public Page<News> getAllNews(Pageable pageable) {
+        return newsRepository.findAll(pageable);
     }
 
-    // metodo per cercare le news tramite keyword specifiche
-    public List<News> searchNewsByKeyword(String keyword) {
-        return newsRepository.findAll().stream().filter(news ->
-                        news.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
-                        news.getDescription().toLowerCase().contains(keyword.toLowerCase())).toList();
-    }
 
+    // cerca notizie tramite parola chiave con paginazione.
+    public Page<News> searchNewsByKeyword(String keyword, Pageable pageable) {
+        return newsRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
+                keyword, keyword, pageable);
+    }
 }
+
 
