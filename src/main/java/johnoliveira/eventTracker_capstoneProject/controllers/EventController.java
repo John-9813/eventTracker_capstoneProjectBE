@@ -1,6 +1,7 @@
 package johnoliveira.eventTracker_capstoneProject.controllers;
 
 import johnoliveira.eventTracker_capstoneProject.entities.Event;
+import johnoliveira.eventTracker_capstoneProject.enums.Category;
 import johnoliveira.eventTracker_capstoneProject.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
