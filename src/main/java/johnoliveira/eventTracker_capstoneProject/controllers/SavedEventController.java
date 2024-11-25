@@ -29,6 +29,7 @@ public class SavedEventController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<List<SavedEventDTO>> getSavedEventsByUser(@PathVariable UUID userId) {
+        System.out.println("Request body: " + userId);
         return ResponseEntity.ok(savedEventService.getSavedEventsByUser(userId));
     }
 
@@ -46,6 +47,7 @@ public class SavedEventController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // 201
     public SavedEventDTO saveEvent(@RequestBody SavedEventCreateDTO dto) {
+        System.out.println("Request body: " + dto);
         return savedEventService.saveEvent(dto);
     }
 

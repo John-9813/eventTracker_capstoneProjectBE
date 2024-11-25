@@ -3,7 +3,6 @@ package johnoliveira.eventTracker_capstoneProject.controllers;
 
 import johnoliveira.eventTracker_capstoneProject.dto.NewUserDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.UserDTO;
-import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
