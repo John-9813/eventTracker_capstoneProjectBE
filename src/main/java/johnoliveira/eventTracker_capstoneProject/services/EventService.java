@@ -1,5 +1,6 @@
 package johnoliveira.eventTracker_capstoneProject.services;
 
+import johnoliveira.eventTracker_capstoneProject.dto.EventCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.EventDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.Event;
 import johnoliveira.eventTracker_capstoneProject.enums.Category;
@@ -56,6 +57,21 @@ public class EventService {
                 event.getCategory().toString()
         );
     }
+
+    // metodo per creare eventi per test
+    public EventDTO createEvent(EventCreateDTO dto) {
+        Event event = new Event();
+        event.setTitle(dto.title());
+        event.setDescription(dto.description());
+        event.setImageUrl(dto.imageUrl());
+        event.setStartDate(dto.startDate());
+        event.setEndDate(dto.endDate());
+        event.setLocation(dto.location());
+        event.setPageUrl(dto.pageUrl());
+        event.setCategory(Category.valueOf(dto.category().toUpperCase()));
+        return toEventDTO(eventRepository.save(event));
+    }
+
 
 
 }

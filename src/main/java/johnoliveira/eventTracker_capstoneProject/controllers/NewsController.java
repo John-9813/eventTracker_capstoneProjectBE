@@ -1,9 +1,11 @@
 package johnoliveira.eventTracker_capstoneProject.controllers;
 
+import johnoliveira.eventTracker_capstoneProject.dto.NewsCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.NewsDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.News;
 import johnoliveira.eventTracker_capstoneProject.services.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,7 @@ public class NewsController {
     private NewsService newsService;
 
     /**
-     * Recupera tutte le notizie paginabili
+     * Recupera tutte le notizie e le inpagina
      * richiesta GET:
      * URL: /news?page=0&size=10
      */
@@ -59,5 +61,13 @@ public class NewsController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(newsService.searchNewsByKeyword(keyword, pageable));
     }
+
+    // richiesta per la creazione di news
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED) // 201
+    public NewsDTO createNews(@RequestBody NewsCreateDTO dto) {
+        return newsService.createNews(dto);
+    }
+
 }
 

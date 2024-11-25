@@ -2,6 +2,7 @@ package johnoliveira.eventTracker_capstoneProject.services;
 
 
 import johnoliveira.eventTracker_capstoneProject.dto.EventDTO;
+import johnoliveira.eventTracker_capstoneProject.dto.NewsCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.NewsDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.Event;
 import johnoliveira.eventTracker_capstoneProject.entities.News;
@@ -53,6 +54,19 @@ public class NewsService {
                 news.getUrl()
         );
     }
+
+    // metodo per creare news di test
+    public NewsDTO createNews(NewsCreateDTO dto) {
+        News news = new News();
+        news.setTitle(dto.title());
+        news.setDescription(dto.description());
+        news.setImageUrl(dto.imageUrl());
+        news.setPublishedDate(dto.publishedDate());
+        news.setSource(dto.source());
+        news.setUrl(dto.url());
+        return toNewsDTO(newsRepository.save(news));
+    }
+
 }
 
 

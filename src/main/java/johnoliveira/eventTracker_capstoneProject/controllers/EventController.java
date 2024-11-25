@@ -1,10 +1,12 @@
 package johnoliveira.eventTracker_capstoneProject.controllers;
 
+import johnoliveira.eventTracker_capstoneProject.dto.EventCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.EventDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.Event;
 import johnoliveira.eventTracker_capstoneProject.enums.Category;
 import johnoliveira.eventTracker_capstoneProject.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +27,7 @@ public class EventController {
     private EventService eventService;
 
     /**
-     * recupera tutti gli eventi paginati.
+     * recupera tutti gli eventi e impagina
      * richiesta GET:
      * URL: /events?page=0&size=10
      */
@@ -74,5 +76,13 @@ public class EventController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(eventService.getEventsByCategory(category, pageable));
     }
+
+    // richiesta per la creazione di eventi
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED) // 201
+    public EventDTO createEvent(@RequestBody EventCreateDTO dto) {
+        return eventService.createEvent(dto);
+    }
+
 }
 
