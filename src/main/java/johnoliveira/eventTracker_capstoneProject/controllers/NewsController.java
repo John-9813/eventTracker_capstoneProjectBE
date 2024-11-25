@@ -1,5 +1,6 @@
 package johnoliveira.eventTracker_capstoneProject.controllers;
 
+import johnoliveira.eventTracker_capstoneProject.dto.NewsDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.News;
 import johnoliveira.eventTracker_capstoneProject.services.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class NewsController {
      * URL: /news?page=0&size=10
      */
     @GetMapping
-    public ResponseEntity<Page<News>> getAllNews(
+    public ResponseEntity<Page<NewsDTO>> getAllNews(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -41,7 +42,7 @@ public class NewsController {
      * URL: /news/{id}
      */
     @GetMapping("/{id}")
-    public ResponseEntity<News> getNewsById(@PathVariable UUID id) {
+    public ResponseEntity<NewsDTO> getNewsById(@PathVariable UUID id) {
         return ResponseEntity.ok(newsService.getNewsById(id));
     }
 
@@ -51,7 +52,7 @@ public class NewsController {
      * URL: /news/search?keyword=parola_chiave&page=0&size=10
      */
     @GetMapping("/search")
-    public ResponseEntity<Page<News>> searchNewsByKeyword(
+    public ResponseEntity<Page<NewsDTO>> searchNewsByKeyword(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

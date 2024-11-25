@@ -1,6 +1,8 @@
 package johnoliveira.eventTracker_capstoneProject.controllers;
 
 
+import johnoliveira.eventTracker_capstoneProject.dto.NewUserDTO;
+import johnoliveira.eventTracker_capstoneProject.dto.UserDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,8 @@ public class UserController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // 201
-    public void createUser(@RequestBody User user) {
-        userService.createUser(user.getName(), user.getSurname(), user.getPassword(), user.getEmail());
+    public UserDTO createUser(@RequestBody NewUserDTO newUserDTO) {
+        return userService.createUser(newUserDTO);
     }
 
     /**
@@ -34,7 +36,7 @@ public class UserController {
      * URL: /users/{id}
      */
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 

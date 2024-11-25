@@ -1,5 +1,6 @@
 package johnoliveira.eventTracker_capstoneProject.services;
 
+import johnoliveira.eventTracker_capstoneProject.dto.EventDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.Event;
 import johnoliveira.eventTracker_capstoneProject.enums.Category;
 import johnoliveira.eventTracker_capstoneProject.exceptions.NotFoundException;
@@ -18,26 +19,44 @@ public class EventService {
     private EventRepository eventRepository;
 
     // ricerca di un singolo evento specifico tramite il suo ID
-    public Event getEventById(UUID eventId) {
-        return eventRepository.findById(eventId).orElseThrow(() ->
+    public EventDTO getEventById(UUID eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() ->
                 new NotFoundException("Event not found with ID: " + eventId));
+        return toEventDTO(event);
     }
-
 
     // ricerca degli eventi tramite categoria con paginazione
-    public Page<Event> getEventsByCategory(Category category, Pageable pageable) {
-        return eventRepository.findByCategory(category.name(), pageable);
+    public Page<EventDTO> getEventsByCategory(Category category, Pageable pageable) {
+        return eventRepository.findByCategory(category.name(), pageable).map(this::toEventDTO);
     }
 
-    // ritorna tutti gli eventi con paginazione
-    public Page<Event> getAllEvents(Pageable pageable) {
-        return eventRepository.findAll(pageable);
+    // ritorna tutti gli eventi con paginazione usando il DTO
+    public Page<EventDTO> getAllEvents(Pageable pageable) {
+        return eventRepository.findAll(pageable)
+                .map(this::toEventDTO);
     }
 
 
     // metodo per la ricerca filtrata degli eventi tramite parola chiave con paginazione
-    public Page<Event> searchEventsByKeyword(String keyword, Pageable pageable) {
-        return eventRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword,keyword, pageable);
+    public Page<EventDTO> searchEventsByKeyword(String keyword, Pageable pageable) {
+        return eventRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword,keyword, pageable).map(this::toEventDTO);
     }
+
+    // mapping del DTO
+    private EventDTO toEventDTO(Event event) {
+        return new EventDTO(
+                event.getEventId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getImageUrl(),
+                event.getStartDate(),
+                event.getEndDate(),
+                event.getLocation(),
+                event.getPageUrl(),
+                event.getCategory().toString()
+        );
+    }
+
+
 }
 

@@ -1,5 +1,7 @@
 package johnoliveira.eventTracker_capstoneProject.controllers;
 
+import johnoliveira.eventTracker_capstoneProject.dto.SavedNewsCreateDTO;
+import johnoliveira.eventTracker_capstoneProject.dto.SavedNewsDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.SavedNews;
 import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.services.SavedNewsService;
@@ -24,10 +26,8 @@ public class SavedNewsController {
      * URL: /saved-news/{userId}
      */
     @GetMapping("/{userId}")
-    public ResponseEntity<List<SavedNews>> getSavedNewsByUser(@PathVariable UUID userId) {
-        User user = new User();
-        user.setUserId(userId);
-        return ResponseEntity.ok(savedNewsService.getSavedNewsByUser(user));
+    public ResponseEntity<List<SavedNewsDTO>> getSavedNewsByUser(@PathVariable UUID userId) {
+        return ResponseEntity.ok(savedNewsService.getSavedNewsByUser(userId));
     }
 
     /**
@@ -42,8 +42,8 @@ public class SavedNewsController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // 201
-    public void saveNews(@RequestBody SavedNews savedNews) {
-        savedNewsService.saveNews(savedNews);
+    public void saveNews(@RequestBody SavedNewsCreateDTO dto) {
+        savedNewsService.saveNews(dto);
     }
 
     /**

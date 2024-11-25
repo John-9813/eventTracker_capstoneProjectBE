@@ -1,5 +1,6 @@
 package johnoliveira.eventTracker_capstoneProject.controllers;
 
+import johnoliveira.eventTracker_capstoneProject.dto.EventDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.Event;
 import johnoliveira.eventTracker_capstoneProject.enums.Category;
 import johnoliveira.eventTracker_capstoneProject.services.EventService;
@@ -29,7 +30,7 @@ public class EventController {
      * URL: /events?page=0&size=10
      */
     @GetMapping
-    public ResponseEntity<Page<Event>> getAllEvents(
+    public ResponseEntity<Page<EventDTO>> getAllEvents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -42,7 +43,7 @@ public class EventController {
      * URL: /events/{id}
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Event> getEventById(@PathVariable UUID id) {
+    public ResponseEntity<EventDTO> getEventById(@PathVariable UUID id) {
         return ResponseEntity.ok(eventService.getEventById(id));
     }
 
@@ -52,7 +53,7 @@ public class EventController {
      * URL: /events/search?keyword=parola_chiave&page=0&size=10
      */
     @GetMapping("/search")
-    public ResponseEntity<Page<Event>> searchEventsByKeyword(
+    public ResponseEntity<Page<EventDTO>> searchEventsByKeyword(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -66,7 +67,7 @@ public class EventController {
      * URL: /events/category/{category}?page=0&size=10
      */
     @GetMapping("/category/{category}")
-    public ResponseEntity<Page<Event>> getEventsByCategory(
+    public ResponseEntity<Page<EventDTO>> getEventsByCategory(
             @PathVariable Category category,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
