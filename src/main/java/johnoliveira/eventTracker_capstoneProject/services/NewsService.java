@@ -22,7 +22,7 @@ public class NewsService {
     private NewsRepository newsRepository;
 
 
-    // recupera una notizia tramite il suo ID.
+    // recupera una notizia tramite il suo ID
     public NewsDTO getNewsById(UUID newsId) {
         News news = newsRepository.findById(newsId).orElseThrow(() ->
                 new NotFoundException("News not found with ID: " + newsId));
@@ -30,13 +30,13 @@ public class NewsService {
     }
 
 
-    // recupera tutte le notizie con paginazione.
+    // recupera tutte le notizie con paginazione
     public Page<NewsDTO> getAllNews(Pageable pageable) {
         return newsRepository.findAll(pageable).map(this::toNewsDTO);
     }
 
 
-    // cerca notizie tramite parola chiave con paginazione.
+    // cerca notizie tramite parola chiave con paginazione
     public Page<NewsDTO> searchNewsByKeyword(String keyword, Pageable pageable) {
         return newsRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
                 keyword, keyword, pageable).map(this::toNewsDTO);
@@ -66,7 +66,6 @@ public class NewsService {
         news.setUrl(dto.url());
         return toNewsDTO(newsRepository.save(news));
     }
-
 }
 
 

@@ -8,6 +8,8 @@ import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.exceptions.NotFoundException;
 import johnoliveira.eventTracker_capstoneProject.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -28,6 +30,11 @@ public class UserService {
                 newUserDTO.email()
         );
         return toUserDTO(userRepository.save(user));
+    }
+
+    // trova tutti gli utenti
+    public Page<UserDTO> getAllUser(Pageable pageable) {
+        return userRepository.findAll(pageable).map(this::toUserDTO);
     }
 
     // recupera utente tramite id

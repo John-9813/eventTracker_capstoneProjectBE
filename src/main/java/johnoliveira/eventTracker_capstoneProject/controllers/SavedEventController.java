@@ -1,5 +1,6 @@
 package johnoliveira.eventTracker_capstoneProject.controllers;
 
+import johnoliveira.eventTracker_capstoneProject.dto.NotesUpdateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.SavedEventCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.SavedEventDTO;
 import johnoliveira.eventTracker_capstoneProject.entities.SavedEvent;
@@ -53,17 +54,21 @@ public class SavedEventController {
 
     /**
      * Aggiorna le note di un evento salvato
-     * Richiesta PUT:
+     * Richiesta PATCH:
      * URL: /saved-events/{id}
      * Body:
      * {
      *   "notes": "Nuove note aggiornate"
      * }
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<SavedEventDTO> updateNotes(@PathVariable UUID id, @RequestBody String newNotes) {
-        return ResponseEntity.ok(savedEventService.updateNotes(id, newNotes));
+    @PatchMapping("/{id}/notes")
+    public ResponseEntity<SavedEventDTO> updateNotes(
+            @PathVariable UUID id,
+            @RequestBody NotesUpdateDTO notesUpdateDTO) {
+        return ResponseEntity.ok(savedEventService.updateNotes(id, notesUpdateDTO.notes()));
     }
+
+
 
     /**
      * Elimina un evento salvato.

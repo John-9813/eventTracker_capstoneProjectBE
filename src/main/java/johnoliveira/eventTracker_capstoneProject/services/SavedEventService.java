@@ -67,12 +67,13 @@ public class SavedEventService {
 
     // metodo per aggiornare annotazioni sugli eventi salvati
     public SavedEventDTO updateNotes(UUID savedEventId, String newNotes) {
-        SavedEvent savedEvent = savedEventRepository.findById(savedEventId)
-                .orElseThrow(() -> new NotFoundException("Saved event not found with ID: " + savedEventId));
+        SavedEvent savedEvent = savedEventRepository.findById(savedEventId).orElseThrow(() ->
+                new NotFoundException("Saved event not found with ID: " + savedEventId));
         savedEvent.setNotes(newNotes);
         savedEventRepository.save(savedEvent);
         return toSavedEventDTO(savedEvent);
     }
+
 
     // mapping del DTO
     private SavedEventDTO toSavedEventDTO(SavedEvent savedEvent) {

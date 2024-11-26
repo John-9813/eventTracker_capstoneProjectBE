@@ -2,8 +2,6 @@ package johnoliveira.eventTracker_capstoneProject.controllers;
 
 import johnoliveira.eventTracker_capstoneProject.dto.SavedNewsCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.SavedNewsDTO;
-import johnoliveira.eventTracker_capstoneProject.entities.SavedNews;
-import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.services.SavedNewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

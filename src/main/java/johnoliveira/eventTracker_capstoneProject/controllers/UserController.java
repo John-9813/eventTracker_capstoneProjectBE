@@ -5,6 +5,9 @@ import johnoliveira.eventTracker_capstoneProject.dto.NewUserDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.UserDTO;
 import johnoliveira.eventTracker_capstoneProject.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,19 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED) // 201
     public UserDTO createUser(@RequestBody NewUserDTO newUserDTO) {
         return userService.createUser(newUserDTO);
+    }
+
+    /**
+     * Lista di tutti gli utenti
+     * richiesta GET:
+     * URL: users?page=0&size=10
+     */
+    @GetMapping
+    public ResponseEntity<Page<UserDTO>> getAllUser(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(userService.getAllUser(pageable));
     }
 
     /**
