@@ -24,7 +24,7 @@ public class UserController {
     /**
      * Crea un nuovo utente
      * richiesta POST:
-     * URL: /users
+     * URL_base+/users
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // 201
@@ -35,7 +35,7 @@ public class UserController {
     /**
      * Lista di tutti gli utenti
      * richiesta GET:
-     * URL: users?page=0&size=10
+     * URL_base+/users?page=0&size=10
      */
     @GetMapping
     public ResponseEntity<Page<UserDTO>> getAllUser(
@@ -48,7 +48,7 @@ public class UserController {
     /**
      * recupera un utente tramite il suo ID
      * richiesta GET:
-     * URL: /users/{id}
+     * URL_base+/users/{id}
      */
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable UUID id) {
@@ -58,7 +58,7 @@ public class UserController {
     /**
      * elimina un utente tramite il suo ID
      * richiesta DELETE:
-     * URL: /users/{id}
+     * URL_base+/users/{id}
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // 204

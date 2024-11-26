@@ -3,8 +3,6 @@ package johnoliveira.eventTracker_capstoneProject.controllers;
 import johnoliveira.eventTracker_capstoneProject.dto.NotesUpdateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.SavedEventCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.SavedEventDTO;
-import johnoliveira.eventTracker_capstoneProject.entities.SavedEvent;
-import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.services.SavedEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/saved-events")
@@ -26,7 +22,7 @@ public class SavedEventController {
     /**
      * Recupera gli eventi salvati da un utente
      * richiesta GET:
-     * URL: /saved-events/{userId}
+     * URL_base+/saved-events/{userId}
      */
     @GetMapping("/{userId}")
     public ResponseEntity<List<SavedEventDTO>> getSavedEventsByUser(@PathVariable UUID userId) {
@@ -37,12 +33,12 @@ public class SavedEventController {
     /**
      * salva un nuovo evento per un utente
      * richiesta POST:
-     * URL: /saved-events
+     * URL_base+/saved-events
      * Body di esempio:
      * {
      *   "user": { "userId": "uuid" },
      *   "event": { "eventId": "uuid" },
-     *   "notes": "Ricordati di portare una giacca"
+     *   "notes": "Nota qualsiasi"
      * }
      */
     @PostMapping
@@ -55,8 +51,8 @@ public class SavedEventController {
     /**
      * Aggiorna le note di un evento salvato
      * Richiesta PATCH:
-     * URL: /saved-events/{id}
-     * Body:
+     * URL_base+/saved-events/{id}
+     * Body di esempio:
      * {
      *   "notes": "Nuove note aggiornate"
      * }
@@ -73,7 +69,7 @@ public class SavedEventController {
     /**
      * Elimina un evento salvato.
      * Richiesta DELETE:
-     * URL: /saved-events/{id}
+     * URL_base+/saved-events/{id}
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // 204

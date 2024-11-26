@@ -21,7 +21,7 @@ public class SavedNewsController {
     /**
      * Recupera le notizie salvate da un utente
      * Richiesta GET:
-     * URL: /saved-news/{userId}
+     * URL_base+/saved-news/{userId}
      */
     @GetMapping("/{userId}")
     public ResponseEntity<List<SavedNewsDTO>> getSavedNewsByUser(@PathVariable UUID userId) {
@@ -31,11 +31,11 @@ public class SavedNewsController {
     /**
      * salva una nuova notizia per un utente
      * richiesta POST:
-     * URL: /saved-news
-     * body:
+     * URL_base+/saved-news
+     * body di esempio:
      * {
-     *   "user": { "userId": "uuid" },
-     *   "news": { "newsId": "uuid" }
+     *   "userId": "uuid" ,
+     *   "newsId": "uuid"
      * }
      */
     @PostMapping
@@ -47,7 +47,7 @@ public class SavedNewsController {
     /**
      * elimina una notizia salvata
      * richiesta DELETE:
-     * URL: /saved-news/{id}
+     * URL_base+/saved-news/{id}
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // 204

@@ -27,7 +27,7 @@ public class EventController {
     /**
      * recupera tutti gli eventi e impagina
      * richiesta GET:
-     * URL: /events?page=0&size=10
+     * URL_base+/events?page=0&size=10
      */
     @GetMapping
     public ResponseEntity<Page<EventDTO>> getAllEvents(
@@ -40,7 +40,7 @@ public class EventController {
     /**
      * recupera un evento tramite il suo ID
      * richiesta GET:
-     * URL: /events/{id}
+     * URL_base+/events/{id}
      */
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable UUID id) {
@@ -50,7 +50,7 @@ public class EventController {
     /**
      * cerca eventi tramite parola chiave
      * richiesta GET:
-     * URL: /events/search?keyword=parola_chiave&page=0&size=10
+     * URL_base+/events/search?keyword=parola_chiave&page=0&size=10
      */
     @GetMapping("/search")
     public ResponseEntity<Page<EventDTO>> searchEventsByKeyword(
@@ -64,7 +64,7 @@ public class EventController {
     /**
      * recupera eventi per categoria
      * richiesta GET:
-     * URL: /events/category/{category}?page=0&size=10
+     * URL_base+/events/category/{category}?page=0&size=10
      */
     @GetMapping("/category/{category}")
     public ResponseEntity<Page<EventDTO>> getEventsByCategory(
@@ -78,7 +78,7 @@ public class EventController {
     /**
      * richiesta per la creazione di eventi
      * richiesta POST:
-     * URL: /events
+     * URL_base+/events
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // 201

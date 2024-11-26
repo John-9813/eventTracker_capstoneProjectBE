@@ -25,7 +25,7 @@ public class NewsController {
     /**
      * Recupera tutte le notizie e le inpagina
      * richiesta GET:
-     * URL: /news?page=0&size=10
+     * URL_base+/news?page=0&size=10
      */
     @GetMapping
     public ResponseEntity<Page<NewsDTO>> getAllNews(
@@ -38,7 +38,7 @@ public class NewsController {
     /**
      * recupera una notizia tramite il suo ID
      * richiesta GET:
-     * URL: /news/{id}
+     * URL_base+/news/{id}
      */
     @GetMapping("/{id}")
     public ResponseEntity<NewsDTO> getNewsById(@PathVariable UUID id) {
@@ -48,7 +48,7 @@ public class NewsController {
     /**
      * cerca notizie tramite parola chiave
      * richiesta esempio GET:
-     * URL: /news/search?keyword=parola_chiave&page=0&size=10
+     * URL_base+/news/search?keyword=parola_chiave&page=0&size=10
      */
     @GetMapping("/search")
     public ResponseEntity<Page<NewsDTO>> searchNewsByKeyword(
@@ -59,7 +59,20 @@ public class NewsController {
         return ResponseEntity.ok(newsService.searchNewsByKeyword(keyword, pageable));
     }
 
-    // richiesta per la creazione di news
+    /**
+     * richiesta per la creazione di news
+     * richiesta tipo PUT:
+     * URL_base+/news
+     * body di esempio:
+     * {
+     *   "title": "Titolo",
+     *   "description": "Descrizione breve",
+     *   "imageUrl": "http://example.com/art.jpg",
+     *   "publishedDate": "2024-12-25",
+     *   "source": "Giornale d'Arte",
+     *   "url": "http://example.com/art-news"
+     * }
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // 201
     public NewsDTO createNews(@RequestBody NewsCreateDTO dto) {
