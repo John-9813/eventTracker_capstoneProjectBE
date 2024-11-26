@@ -2,8 +2,8 @@ package johnoliveira.eventTracker_capstoneProject.controllers;
 
 import johnoliveira.eventTracker_capstoneProject.dto.EventCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.EventDTO;
-import johnoliveira.eventTracker_capstoneProject.entities.Event;
 import johnoliveira.eventTracker_capstoneProject.enums.Category;
+import johnoliveira.eventTracker_capstoneProject.exceptions.BadRequestException;
 import johnoliveira.eventTracker_capstoneProject.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +15,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/events")
@@ -40,7 +38,7 @@ public class EventController {
     }
 
     /**
-     * recupera un evento tramite il suo ID.
+     * recupera un evento tramite il suo ID
      * richiesta GET:
      * URL: /events/{id}
      */
@@ -50,7 +48,7 @@ public class EventController {
     }
 
     /**
-     * cerca eventi tramite parola chiave.
+     * cerca eventi tramite parola chiave
      * richiesta GET:
      * URL: /events/search?keyword=parola_chiave&page=0&size=10
      */
@@ -64,7 +62,7 @@ public class EventController {
     }
 
     /**
-     * recupera eventi per categoria.
+     * recupera eventi per categoria
      * richiesta GET:
      * URL: /events/category/{category}?page=0&size=10
      */
@@ -77,7 +75,11 @@ public class EventController {
         return ResponseEntity.ok(eventService.getEventsByCategory(category, pageable));
     }
 
-    // richiesta per la creazione di eventi
+    /**
+     * richiesta per la creazione di eventi
+     * richiesta POST:
+     * URL: /events
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // 201
     public EventDTO createEvent(@RequestBody EventCreateDTO dto) {

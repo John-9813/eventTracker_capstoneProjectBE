@@ -28,7 +28,7 @@ public class EventService {
 
     // ricerca degli eventi tramite categoria con paginazione
     public Page<EventDTO> getEventsByCategory(Category category, Pageable pageable) {
-        return eventRepository.findByCategory(category.name(), pageable).map(this::toEventDTO);
+        return eventRepository.findByCategory(category, pageable).map(this::toEventDTO);
     }
 
     // ritorna tutti gli eventi con paginazione usando il DTO

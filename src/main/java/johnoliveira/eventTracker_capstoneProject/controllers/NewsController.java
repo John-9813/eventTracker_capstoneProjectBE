@@ -2,7 +2,6 @@ package johnoliveira.eventTracker_capstoneProject.controllers;
 
 import johnoliveira.eventTracker_capstoneProject.dto.NewsCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.NewsDTO;
-import johnoliveira.eventTracker_capstoneProject.entities.News;
 import johnoliveira.eventTracker_capstoneProject.services.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/news")
