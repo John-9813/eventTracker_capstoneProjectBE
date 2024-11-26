@@ -21,14 +21,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable());
-        httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
-        httpSecurity.sessionManagement(httpSecuritySessionManagementConfigurer ->
-                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll());
-        httpSecurity.cors(Customizer.withDefaults());
-        httpSecurity.addFilterBefore(filterChainExceptionHandler, LogoutFilter.class);
+        httpSecurity.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth ->
+                        auth.anyRequest().permitAll()).sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).cors(Customizer.withDefaults());
         return httpSecurity.build();
     }
 }
