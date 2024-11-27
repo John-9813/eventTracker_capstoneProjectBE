@@ -10,6 +10,7 @@ import johnoliveira.eventTracker_capstoneProject.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -18,15 +19,20 @@ import java.util.UUID;
 public class UserService {
 
     @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
 
     // crea un nuovo utente
     public UserDTO createUser(NewUserDTO newUserDTO) {
+        String encodedPassword = passwordEncoder.encode(newUserDTO.password());
+
         User user = new User(
                 newUserDTO.name(),
                 newUserDTO.surname(),
-                newUserDTO.password(),
+                encodedPassword,
                 newUserDTO.email()
         );
         return toUserDTO(userRepository.save(user));
@@ -39,9 +45,8 @@ public class UserService {
 
     // recupera utente tramite id
     public UserDTO getUserById(UUID userId) {
-        return userRepository.findById(userId)
-                .map(this::toUserDTO)
-                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
+        return userRepository.findById(userId).map(this::toUserDTO).orElseThrow(() ->
+                new NotFoundException("User not found with ID: " + userId));
     }
 
     // elimina utente tramite id
