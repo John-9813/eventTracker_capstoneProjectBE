@@ -2,7 +2,6 @@ package johnoliveira.eventTracker_capstoneProject.tools;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,9 +12,6 @@ import java.util.Date;
 public class JWT {
     @Value("${jwt.secret}")
     private String secret;
-
-    @Value("${jwt.expiration}")
-    private long expiration;
 
     public String generateToken(String userId) {
         return Jwts.builder()
@@ -37,4 +33,5 @@ public class JWT {
             throw new UnauthorizedException("Token non valido");
         }
     }
+
 }

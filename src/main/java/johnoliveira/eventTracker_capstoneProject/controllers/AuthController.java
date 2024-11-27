@@ -18,6 +18,11 @@ public class AuthController {
      * Esegui il login
      * richiesta POST:
      * URL_base+/login
+     * body di esempio:
+     * {
+     *   "email": "esempio@example.com",
+     *   "password": "Password123"
+     * }
      */
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO request) {
