@@ -4,11 +4,12 @@ import johnoliveira.eventTracker_capstoneProject.dto.AuthRequestDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.AuthResponseDTO;
 import johnoliveira.eventTracker_capstoneProject.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
@@ -26,8 +27,19 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO request) {
-        String token = authService.login(request.email(), request.password());
-        return ResponseEntity.ok(new AuthResponseDTO(token));
+        try {
+            System.out.println("Email ricevuta: " + request.email());
+            System.out.println("Password ricevuta: " + request.password());
+            String token = authService.login(request.email(), request.password());
+            return ResponseEntity.ok(new AuthResponseDTO(token));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
+
+
+
 }
 
