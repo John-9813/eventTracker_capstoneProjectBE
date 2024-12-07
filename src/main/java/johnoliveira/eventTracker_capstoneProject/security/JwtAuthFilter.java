@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import johnoliveira.eventTracker_capstoneProject.dto.UserDTO;
+import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.exceptions.UnauthorizedException;
 import johnoliveira.eventTracker_capstoneProject.services.UserService;
 import johnoliveira.eventTracker_capstoneProject.tools.JWT;
@@ -23,12 +24,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWT jwt;
+
     @Autowired
     private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+
+        String requestURI = request.getRequestURI();
+        // Escludi gli endpoint pubblici
+        if (requestURI.startsWith("/auth/") || requestURI.equals("/events/external")) {
+            chain.doFilter(request, response); // Salta l'autenticazione per questi endpoint
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -49,15 +59,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            } catch (UnauthorizedException e) {
-                // Invia un errore HTTP 401 se il token non è valido
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-                return; // Interrompi la catena del filtro
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token non valido");
+                return;
             }
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token mancante o non valido");
+            return;
         }
 
-        // Continua la catena del filtro
         chain.doFilter(request, response);
     }
 }
+
 

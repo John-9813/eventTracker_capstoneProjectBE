@@ -3,7 +3,6 @@ package johnoliveira.eventTracker_capstoneProject.controllers;
 import johnoliveira.eventTracker_capstoneProject.dto.EventCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.EventDTO;
 import johnoliveira.eventTracker_capstoneProject.enums.Category;
-import johnoliveira.eventTracker_capstoneProject.exceptions.BadRequestException;
 import johnoliveira.eventTracker_capstoneProject.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 
+
 @RestController
 @RequestMapping("/events")
 public class EventController {
@@ -25,9 +25,9 @@ public class EventController {
     private EventService eventService;
 
     /**
-     * recupera tutti gli eventi e impagina
-     * richiesta GET:
-     * URL_base+/events?page=0&size=10
+     * Recupera tutti gli eventi salvati nel database con paginazione.
+     * Richiesta GET:
+     * /events?page=0&size=10
      */
     @GetMapping
     public ResponseEntity<Page<EventDTO>> getAllEvents(
@@ -38,9 +38,9 @@ public class EventController {
     }
 
     /**
-     * recupera un evento tramite il suo ID
-     * richiesta GET:
-     * URL_base+/events/{id}
+     * Recupera un evento salvato tramite il suo ID.
+     * Richiesta GET:
+     * /events/{id}
      */
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable UUID id) {
@@ -48,9 +48,20 @@ public class EventController {
     }
 
     /**
-     * cerca eventi tramite parola chiave
-     * richiesta GET:
-     * URL_base+/events/search?keyword=parola_chiave&page=0&size=10
+     * Crea un nuovo evento personalizzato.
+     * Richiesta POST:
+     * /events
+     */
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventDTO createEvent(@RequestBody EventCreateDTO dto) {
+        return eventService.createEvent(dto);
+    }
+
+    /**
+     * Cerca eventi salvati tramite parola chiave.
+     * Richiesta GET:
+     * /events/search?keyword=parola_chiave&page=0&size=10
      */
     @GetMapping("/search")
     public ResponseEntity<Page<EventDTO>> searchEventsByKeyword(
@@ -62,9 +73,9 @@ public class EventController {
     }
 
     /**
-     * recupera eventi per categoria
-     * richiesta GET:
-     * URL_base+/events/category/{category}?page=0&size=10
+     * Recupera eventi salvati per categoria.
+     * Richiesta GET:
+     * /events/category/{category}?page=0&size=10
      */
     @GetMapping("/category/{category}")
     public ResponseEntity<Page<EventDTO>> getEventsByCategory(
@@ -74,17 +85,6 @@ public class EventController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(eventService.getEventsByCategory(category, pageable));
     }
-
-    /**
-     * richiesta per la creazione di eventi
-     * richiesta POST:
-     * URL_base+/events
-     */
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // 201
-    public EventDTO createEvent(@RequestBody EventCreateDTO dto) {
-        return eventService.createEvent(dto);
-    }
-
 }
+
 

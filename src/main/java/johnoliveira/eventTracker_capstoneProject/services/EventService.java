@@ -72,7 +72,5 @@ public class EventService {
         return toEventDTO(eventRepository.save(event));
     }
 
-
-
 }
 
