@@ -4,17 +4,21 @@ import johnoliveira.eventTracker_capstoneProject.dto.EventCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.EventDTO;
 import johnoliveira.eventTracker_capstoneProject.enums.Category;
 import johnoliveira.eventTracker_capstoneProject.services.EventService;
+import johnoliveira.eventTracker_capstoneProject.tools.EventCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.web.client.RestTemplate;
 
 
 @RestController
@@ -23,6 +27,61 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private EventCache eventCache;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+
+    @Value("${ticketmaster.api.key}")
+    private String apiKey;
+
+
+    @GetMapping("/proxy")
+    public ResponseEntity<List<EventDTO>> proxyTicketmasterEvents(
+            @RequestParam(required = false, defaultValue = "") String city,
+            @RequestParam(defaultValue = "IT") String countryCode,
+            @RequestParam(defaultValue = "it-it") String locale) {
+
+        String url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=" + apiKey +
+                "&countryCode=" + countryCode + "&locale=" + locale +
+                (city.isEmpty() ? "" : "&city=" + city);
+
+        System.out.println("Invio richiesta a URL: " + url);
+
+        try {
+            // Effettua la richiesta al Ticketmaster API
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+            if (response.getBody() == null || response.getBody().isEmpty()) {
+                System.err.println("La risposta del Ticketmaster API è vuota.");
+                return ResponseEntity.ok(Collections.emptyList());
+            }
+
+            // Log della risposta completa
+            System.out.println("Risposta completa dal Ticketmaster API: " + response.getBody());
+
+            // Parsing della risposta
+            List<EventDTO> events = eventService.parseResponseToEvents(response.getBody());
+
+            if (events.isEmpty()) {
+                System.out.println("Nessun evento trovato dopo il parsing.");
+            } else {
+                System.out.println("Numero di eventi trovati: " + events.size());
+            }
+
+            return ResponseEntity.ok(events);
+
+        } catch (Exception e) {
+            // Gestione degli errori
+            System.err.println("Errore nella richiesta: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     /**
      * Recupera tutti gli eventi salvati nel database con paginazione.
@@ -43,7 +102,7 @@ public class EventController {
      * /events/{id}
      */
     @GetMapping("/{id}")
-    public ResponseEntity<EventDTO> getEventById(@PathVariable UUID id) {
+    public ResponseEntity<EventDTO> getEventById(@PathVariable String id) {
         return ResponseEntity.ok(eventService.getEventById(id));
     }
 
