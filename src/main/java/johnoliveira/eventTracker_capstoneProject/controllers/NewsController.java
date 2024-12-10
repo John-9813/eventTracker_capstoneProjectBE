@@ -4,15 +4,18 @@ import johnoliveira.eventTracker_capstoneProject.dto.NewsCreateDTO;
 import johnoliveira.eventTracker_capstoneProject.dto.NewsDTO;
 import johnoliveira.eventTracker_capstoneProject.services.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.client.RestTemplate;
 
 
 @RestController
@@ -21,6 +24,12 @@ public class NewsController {
 
     @Autowired
     private NewsService newsService;
+
+    @Value("${newsapi.api.key}")
+    private String apiKey;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * Recupera tutte le notizie e le inpagina
@@ -77,6 +86,25 @@ public class NewsController {
     @ResponseStatus(HttpStatus.CREATED) // 201
     public NewsDTO createNews(@RequestBody NewsCreateDTO dto) {
         return newsService.createNews(dto);
+    }
+
+    @GetMapping("/external")
+    public ResponseEntity<List<NewsDTO>> proxyNewsFromExternal(
+            @RequestParam(defaultValue = "news") String query,
+            @RequestParam(defaultValue = "it") String language) {
+
+        String url = String.format("https://newsapi.org/v2/everything?q=%s&language=%s&apiKey=%s",
+                query, language, apiKey);
+
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            System.out.println("Risposta dal NewsAPI: " + response.getBody());
+            List<NewsDTO> news = newsService.parseResponseToNews(response.getBody());
+            return ResponseEntity.ok(news);
+        } catch (Exception e) {
+            System.err.println("Errore nella richiesta: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }
