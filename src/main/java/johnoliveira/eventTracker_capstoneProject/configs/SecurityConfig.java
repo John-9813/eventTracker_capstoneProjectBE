@@ -1,11 +1,9 @@
 package johnoliveira.eventTracker_capstoneProject.configs;
 
-import johnoliveira.eventTracker_capstoneProject.security.FilterChainExceptionHandler;
 import johnoliveira.eventTracker_capstoneProject.security.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,8 +25,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/events/external").permitAll() // Permetti accesso pubblico
-                        .anyRequest().authenticated() // Proteggi il resto
+                        .requestMatchers("/auth/**", "/events/proxy", "/news/external").permitAll()
+                        .anyRequest().authenticated() 
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
