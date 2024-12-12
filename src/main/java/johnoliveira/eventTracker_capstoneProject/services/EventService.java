@@ -121,6 +121,8 @@ public class EventService {
     }
 
 
+
+
     private LocalDate parseDate(String dateString) {
         try {
             return LocalDate.parse(dateString);

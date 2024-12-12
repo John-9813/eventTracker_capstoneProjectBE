@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import johnoliveira.eventTracker_capstoneProject.dto.UserDTO;
-import johnoliveira.eventTracker_capstoneProject.entities.User;
 import johnoliveira.eventTracker_capstoneProject.exceptions.UnauthorizedException;
 import johnoliveira.eventTracker_capstoneProject.services.UserService;
 import johnoliveira.eventTracker_capstoneProject.tools.JWT;

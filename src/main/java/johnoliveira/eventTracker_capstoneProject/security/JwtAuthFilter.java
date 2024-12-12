@@ -33,9 +33,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-        // Escludi gli endpoint pubblici
-        if (requestURI.startsWith("/auth/") || requestURI.equals("/events/external")) {
-            chain.doFilter(request, response); // Salta l'autenticazione per questi endpoint
+
+        if (requestURI.startsWith("/auth/") || requestURI.startsWith("/events/") || requestURI.startsWith("/news/")) {
+            chain.doFilter(request, response);
             return;
         }
 
@@ -71,5 +71,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 }
+
 
 

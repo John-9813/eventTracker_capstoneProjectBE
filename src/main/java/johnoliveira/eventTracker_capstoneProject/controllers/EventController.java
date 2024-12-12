@@ -45,14 +45,18 @@ public class EventController {
             @RequestParam(defaultValue = "IT") String countryCode,
             @RequestParam(defaultValue = "it-it") String locale) {
 
+        // Usa un valore di fallback per city se vuoto o non valido
+        if (city.isEmpty() || city.equals("IT")) {
+            city = "Milano"; // Valore di default
+        }
+
         String url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=" + apiKey +
                 "&countryCode=" + countryCode + "&locale=" + locale +
-                (city.isEmpty() ? "" : "&city=" + city);
+                "&city=" + city;
 
         System.out.println("Invio richiesta a URL: " + url);
 
         try {
-            // Effettua la richiesta al Ticketmaster API
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
             if (response.getBody() == null || response.getBody().isEmpty()) {
@@ -60,27 +64,18 @@ public class EventController {
                 return ResponseEntity.ok(Collections.emptyList());
             }
 
-            // Log della risposta completa
-            System.out.println("Risposta completa dal Ticketmaster API: " + response.getBody());
-
-            // Parsing della risposta
             List<EventDTO> events = eventService.parseResponseToEvents(response.getBody());
-
-            if (events.isEmpty()) {
-                System.out.println("Nessun evento trovato dopo il parsing.");
-            } else {
-                System.out.println("Numero di eventi trovati: " + events.size());
-            }
-
             return ResponseEntity.ok(events);
 
         } catch (Exception e) {
-            // Gestione degli errori
             System.err.println("Errore nella richiesta: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+
 
 
     /**
