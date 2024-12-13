@@ -95,11 +95,37 @@ public class EventService {
             List<EventDTO> events = new ArrayList<>();
             for (JsonNode eventNode : eventsNode) {
                 try {
+                    // Recupera le immagini disponibili
+                    JsonNode imagesNode = eventNode.path("images");
+                    String imageUrl = "https://via.placeholder.com/400x200";
+                    boolean validImageFound = false;
+
+                    if (imagesNode.isArray()) {
+                        for (JsonNode image : imagesNode) {
+                            int width = image.path("width").asInt(0);
+                            int height = image.path("height").asInt(0);
+
+                            // Controlla che larghezza e altezza siano superiori a una soglia minima
+                            if (width >= 800 && height >= 600) {
+                                imageUrl = image.path("url").asText("https://via.placeholder.com/400x200");
+                                validImageFound = true;
+                                break; // Usa la prima immagine valida trovata
+                            }
+                        }
+                    }
+
+                    // Se nessuna immagine valida è stata trovata, salta l'evento
+                    if (!validImageFound) {
+                        System.out.println("Evento saltato a causa di immagini di bassa qualità: " + eventNode.path("name").asText("Titolo non disponibile"));
+                        continue;
+                    }
+
+                    // Creazione dell'oggetto EventDTO
                     EventDTO event = new EventDTO(
                             eventNode.path("id").asText("ID non disponibile"),
                             eventNode.path("name").asText("Titolo non disponibile"),
                             eventNode.path("description").asText("Descrizione non disponibile"),
-                            eventNode.path("images").get(0).path("url").asText("https://via.placeholder.com/400x200"),
+                            imageUrl, // Immagine filtrata
                             parseDate(eventNode.path("dates").path("start").path("localDate").asText("1900-01-01")),
                             parseDate(eventNode.path("dates").path("end").path("localDate").asText("1900-01-01")),
                             eventNode.path("_embedded").path("venues").get(0).path("name").asText("Luogo non disponibile"),
@@ -119,6 +145,7 @@ public class EventService {
             return Collections.emptyList();
         }
     }
+
 
 
 
