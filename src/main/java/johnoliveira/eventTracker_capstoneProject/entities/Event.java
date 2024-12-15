@@ -50,6 +50,9 @@ public class Event {
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     private Category category;
+
+    @Column(name = "city" , nullable = false)
+    private String City;
 }
 
 

@@ -1,10 +1,9 @@
 package johnoliveira.eventTracker_capstoneProject.dto;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public record EventDTO(
-       String eventId,
+        String eventId,
         String title,
         String description,
         String imageUrl,
@@ -12,6 +11,8 @@ public record EventDTO(
         LocalDate endDate,
         String location,
         String pageUrl,
-        String category
+        String category,
+        String city
 ) {}
+
 
