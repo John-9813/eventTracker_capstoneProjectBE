@@ -29,14 +29,14 @@ public class Event {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description", length = 1000)
-    private String description;
-
     @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
+
+    @Column(name = "start_time")
+    private String startTime;
 
     @Column(name = "end_date")
     private LocalDate endDate;
@@ -47,9 +47,13 @@ public class Event {
     @Column(name = "page_url")
     private String pageUrl;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "category", nullable = false)
-    private Category category;
+    @Column(name = "ticket_status")
+    private String ticketStatus;
+
+    @Column(name = "city", nullable = false)
+    private String city;
 }
+
+
 
 
