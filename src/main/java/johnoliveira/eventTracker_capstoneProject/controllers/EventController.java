@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,26 +30,21 @@ public class EventController {
     private EventService eventService;
 
     @Autowired
-    private EventCache eventCache;
-
-    @Autowired
     private RestTemplate restTemplate;
-
 
     @Value("${ticketmaster.api.key}")
     private String apiKey;
 
-
+    /**
+     * Proxy per recuperare eventi da Ticketmaster.
+     * Richiesta GET:
+     * /events/proxy
+     */
     @GetMapping("/proxy")
     public ResponseEntity<List<EventDTO>> proxyTicketmasterEvents(
-            @RequestParam(required = false, defaultValue = "") String city,
+            @RequestParam(required = false, defaultValue = "Milano") String city,
             @RequestParam(defaultValue = "IT") String countryCode,
             @RequestParam(defaultValue = "it-it") String locale) {
-
-        // Usa un valore di fallback per city se vuoto o non valido
-        if (city.isEmpty() || city.equals("IT")) {
-            city = "Milano"; // Valore di default
-        }
 
         String url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=" + apiKey +
                 "&countryCode=" + countryCode + "&locale=" + locale +
@@ -57,7 +54,6 @@ public class EventController {
 
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-
             if (response.getBody() == null || response.getBody().isEmpty()) {
                 System.err.println("La risposta del Ticketmaster API è vuota.");
                 return ResponseEntity.ok(Collections.emptyList());
@@ -65,10 +61,8 @@ public class EventController {
 
             List<EventDTO> events = eventService.parseResponseToEvents(response.getBody());
             return ResponseEntity.ok(events);
-
         } catch (Exception e) {
             System.err.println("Errore nella richiesta: " + e.getMessage());
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -108,64 +102,41 @@ public class EventController {
     }
 
     /**
-     * Cerca eventi salvati tramite parola chiave.
+     * Filtro avanzato per eventi con supporto per keyword e city.
      * Richiesta GET:
-     * /events/search?keyword=parola_chiave&page=0&size=10
+     * /events/filter?keyword=parola_chiave&city=nome_città&page=0&size=20
      */
-    @GetMapping("/search")
-    public ResponseEntity<List<EventDTO>> searchEventsByKeyword(
-            @RequestParam String keyword,
-            @RequestParam(defaultValue = "Milano") String city,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        try {
-            // Cerca eventi tramite parola chiave e città
-            List<EventDTO> events = eventService.searchEventsFromAPI(keyword, city);
-            return ResponseEntity.ok(events);
-        } catch (Exception e) {
-            System.err.println("Errore durante la ricerca degli eventi: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @GetMapping("/filter")
     public ResponseEntity<List<EventDTO>> filterEvents(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String city,
-            @RequestParam(required = false) String category) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
 
-        System.out.println("Parametri originali: keyword=" + keyword + ", city=" + city + ", category=" + category);
-
-        // Fallback per parametri
-        city = (city == null || city.isEmpty() || city.equals("IT")) ? "Milano" : city;
-        keyword = (keyword == null) ? "" : keyword;
-        category = (category == null) ? "" : category;
-
-        String url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=" + apiKey +
-                "&countryCode=IT&locale=it-it" +
-                "&city=" + city;
-
-        if (!keyword.isEmpty()) {
-            url += "&keyword=" + keyword;
-        }
-        if (!category.isEmpty()) {
-            url += "&classificationName=" + category;
+        // Evita chiamate con parametri vuoti
+        if ((keyword == null || keyword.isEmpty()) && (city == null || city.isEmpty())) {
+            System.out.println("Chiamata con parametri vuoti, nessun evento filtrato.");
+            return ResponseEntity.ok(Collections.emptyList());
         }
 
-        System.out.println("URL generato: " + url);
+        StringBuilder urlBuilder = new StringBuilder("https://app.ticketmaster.com/discovery/v2/events.json?apikey=")
+                .append(apiKey)
+                .append("&countryCode=IT&locale=it-it")
+                .append("&page=").append(page)
+                .append("&size=").append(size);
+
+        if (keyword != null && !keyword.isEmpty()) {
+            urlBuilder.append("&keyword=").append(URLEncoder.encode(keyword, StandardCharsets.UTF_8));
+        }
+        if (city != null && !city.isEmpty()) {
+            urlBuilder.append("&city=").append(URLEncoder.encode(city, StandardCharsets.UTF_8));
+        }
+
+        System.out.println("URL Ticketmaster generato: " + urlBuilder.toString());
 
         try {
-            String responseBody = restTemplate.getForObject(url, String.class);
-            System.out.println("Risposta completa: " + responseBody);
-
+            String responseBody = restTemplate.getForObject(urlBuilder.toString(), String.class);
             List<EventDTO> events = eventService.parseResponseToEvents(responseBody);
-            System.out.println("Eventi mappati: " + events);
-
-            if (events.isEmpty()) {
-                System.out.println("Nessun evento trovato con i parametri forniti.");
-            }
-
             return ResponseEntity.ok(events);
         } catch (Exception e) {
             System.err.println("Errore durante il filtraggio degli eventi: " + e.getMessage());
@@ -174,20 +145,7 @@ public class EventController {
     }
 
 
-
-    /**
-     * Recupera eventi salvati per categoria.
-     * Richiesta GET:
-     * /events/category/{category}?page=0&size=10
-     */
-    @GetMapping("/category/{category}")
-    public ResponseEntity<Page<EventDTO>> getEventsByCategory(
-            @PathVariable Category category,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(eventService.getEventsByCategory(category, pageable));
-    }
 }
+
 
 

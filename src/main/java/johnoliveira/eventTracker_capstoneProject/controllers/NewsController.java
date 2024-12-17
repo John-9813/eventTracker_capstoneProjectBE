@@ -91,10 +91,13 @@ public class NewsController {
     @GetMapping("/external")
     public ResponseEntity<List<NewsDTO>> proxyNewsFromExternal(
             @RequestParam(defaultValue = "news") String query,
-            @RequestParam(defaultValue = "it") String language) {
+            @RequestParam(defaultValue = "it") String language,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
 
-        String url = String.format("https://newsapi.org/v2/everything?q=%s&language=%s&apiKey=%s",
-                query, language, apiKey);
+        String url = String.format(
+                "https://newsapi.org/v2/everything?q=%s&language=%s&page=%d&pageSize=%d&apiKey=%s",
+                query, language, page, pageSize, apiKey);
 
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -106,6 +109,7 @@ public class NewsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }
 

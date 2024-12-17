@@ -10,10 +10,7 @@ import johnoliveira.eventTracker_capstoneProject.entities.Event;
 import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<Event, UUID> {
-    // cerca eventi per categoria con paginazione
-    Page<Event> findByCategory(Category category, Pageable pageable);
 
     // cerca eventi per parola chiave con paginazione
-    Page<Event> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-            String titleKeyword, String descriptionKeyword, Pageable pageable);
+    Page<Event> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 }

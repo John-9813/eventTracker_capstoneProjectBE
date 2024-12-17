@@ -86,10 +86,11 @@ public class NewsService {
     }
 
     // Metodo per recuperare notizie da NewsAPI
-    public List<NewsDTO> fetchNewsFromAPI(String query, String country, int pageSize) {
+    public List<NewsDTO> fetchNewsFromAPI(String query, String country, int page, int pageSize) {
         String url = newsApiBaseUrl + "/top-headlines?apiKey=" + apiKey +
                 "&q=" + (query != null ? query : "") +
                 "&country=" + (country != null ? country : "it") +
+                "&page=" + page +
                 "&pageSize=" + pageSize;
 
         try {
@@ -100,6 +101,7 @@ public class NewsService {
             return Collections.emptyList();
         }
     }
+
 
     public List<NewsDTO> parseResponseToNews(String responseBody) {
         try {
@@ -135,8 +137,6 @@ public class NewsService {
             return Collections.emptyList();
         }
     }
-
-
 }
 
 
