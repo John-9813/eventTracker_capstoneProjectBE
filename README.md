@@ -14,7 +14,8 @@ PostgreSQL (Database)
 Hibernate (ORM)
 JWT (Autenticazione e Autorizzazione)
 Lombok (Per ridurre boilerplate code)
-⚙️ Configurazione del Progetto
+
+## ⚙️ Configurazione del Progetto
 
 ### 1. Requisiti Preliminari
 Java 21 installato
@@ -76,19 +77,27 @@ L'applicazione sarà disponibile su:
 http://localhost:8080
 
 ## 📄 Documentazione API
-Puoi testare le API utilizzando Postman o Swagger:
+Puoi testare le API utilizzando Postman o Swagger
 
 ## Endpoint Principali
-Autenticazione
+
+### Autenticazione
 POST /auth/login: Effettua il login e restituisce il token JWT.
-Eventi
+
+### Eventi
 GET /events/filter: Filtra eventi utilizzando città e keyword.
+
 POST /events/saved: Salva un evento preferito.
+
 DELETE /events/saved/{id}: Rimuove un evento preferito.
-Notizie
+
+### Notizie
 GET /news/external: Recupera le notizie tramite NewsAPI.
+
 POST /news/saved: Salva una notizia preferita.
+
 DELETE /news/saved/{id}: Rimuove una notizia preferita.
+
 
 ## 🔒 Autenticazione
 L'autenticazione è gestita tramite JWT (JSON Web Token):
@@ -132,8 +141,7 @@ src
     
     
 ## 📫 Contatti
-
 Se hai bisogno di ulteriori informazioni o supporto:
-John Oliveira
 Email: john.oliver98.br@gmail.com
+
 LinkedIn: https://www.linkedin.com/in/john-oliver-2205aa247
